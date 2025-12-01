@@ -1,26 +1,53 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* 和風モダン配色 (Japanese Traditional Colors) */
+  --kinari: #fcfaf2;   /* 生成色: ベース背景 */
+  --ai: #165e83;       /* 藍色: メインカラー */
+  --hiwada: #965042;   /* 檜皮色: サブカラー/テキスト */
+  --shu: #eb6101;      /* 朱色: アクセント/結び */
+  --wakakusa: #c3d825; /* 若草色: 通知/New */
+  --sumi: #2c2c2c;     /* 墨色: 本文テキスト */
+
+  --background: var(--kinari);
+  --foreground: var(--sumi);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  
+  --color-kinari: var(--kinari);
+  --color-ai: var(--ai);
+  --color-hiwada: var(--hiwada);
+  --color-shu: var(--shu);
+  --color-wakakusa: var(--wakakusa);
+  --color-sumi: var(--sumi);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* フォント定義: Shippori Minchoを優先 */
+  --font-serif: var(--font-shippori), var(--font-noto-serif), serif;
+  /* UIパーツなどでゴシック的に使いたい場合も明朝体をベースにするか、Noto Serifを使う */
+  --font-sans: var(--font-noto-serif), sans-serif;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-serif);
+}
+
+/* 縦書きユーティリティ */
+.vertical-rl {
+  writing-mode: vertical-rl;
+  -webkit-writing-mode: vertical-rl;
+}
+
+.text-upright {
+  text-orientation: upright;
+}
+
+.writing-vertical-rl {
+  writing-mode: vertical-rl;
+  -webkit-writing-mode: vertical-rl;
+  text-orientation: upright;
 }
