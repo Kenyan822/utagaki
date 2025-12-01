@@ -12,7 +12,7 @@ import { MatchRevealOverlay } from "@/components/features/MatchRevealOverlay";
 export default function WaitingRoomPage() {
   const { user } = useUser();
   const { getUserVerses, getRepliesByVerseId, createMatch } = useGame();
-  const [matchedPartner, setMatchedPartner] = useState<User | null>(null);
+  const [matchedPartner, setMatchedPartner] = useState<(User & { matchId: string }) | null>(null);
 
   // ログインしていない場合はリダイレクトなどの処理が必要だが、今回は簡易的にメッセージ表示
   if (!user) {
@@ -69,7 +69,7 @@ export default function WaitingRoomPage() {
       <MatchRevealOverlay 
         isOpen={!!matchedPartner} 
         partner={matchedPartner} 
-        matchId={(matchedPartner as any)?.matchId} // IDを渡す
+        matchId={matchedPartner?.matchId} // IDを渡す
         onClose={() => setMatchedPartner(null)} 
       />
     </main>
