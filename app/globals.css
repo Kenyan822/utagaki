@@ -1,13 +1,27 @@
 @import "tailwindcss";
 
 :root {
-  /* 和風モダン配色 (Japanese Traditional Colors) */
-  --kinari: #fcfaf2;   /* 生成色: ベース背景 */
-  --ai: #165e83;       /* 藍色: メインカラー */
-  --hiwada: #965042;   /* 檜皮色: サブカラー/テキスト */
-  --shu: #eb6101;      /* 朱色: アクセント/結び */
-  --wakakusa: #c3d825; /* 若草色: 通知/New */
-  --sumi: #2c2c2c;     /* 墨色: 本文テキスト */
+  /* 松竹梅・豪華絢爛テーマ (Sho Chiku Bai & Luxurious) */
+  
+  /* --- ベースカラー --- */
+  --kinari: #fffcf5;     /* 生成色: ベース背景（少し明るめ） */
+  --sumi: #1a1a1a;       /* 墨色: テキスト */
+  
+  /* --- 松竹梅 --- */
+  --matsu: #1B4D3E;      /* 松（常盤色）: メインカラー、威厳、永遠 */
+  --take: #769164;       /* 竹（老竹色）: サブカラー、成長、節目 */
+  --ume: #E95295;        /* 梅（紅梅色）: アクセント、華やかさ */
+  
+  /* --- 雅・豪華 --- */
+  --gold: #C5A059;       /* 金（枯茶）: 枠線、装飾 */
+  --gold-light: #F2D06B; /* 明るい金: ハイライト */
+  --miyabi: #7058A3;     /* 雅（江戸紫）: 高貴なアクセント */
+  
+  /* --- 既存変数へのマッピング（互換性維持のため） --- */
+  --ai: var(--matsu);
+  --hiwada: var(--take);
+  --shu: var(--ume);
+  --wakakusa: var(--take); /* 竹の色を使用 */
 
   --background: var(--kinari);
   --foreground: var(--sumi);
@@ -18,22 +32,60 @@
   --color-foreground: var(--foreground);
   
   --color-kinari: var(--kinari);
-  --color-ai: var(--ai);
-  --color-hiwada: var(--hiwada);
-  --color-shu: var(--shu);
-  --color-wakakusa: var(--wakakusa);
   --color-sumi: var(--sumi);
+  
+  --color-matsu: var(--matsu);
+  --color-take: var(--take);
+  --color-ume: var(--ume);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-miyabi: var(--miyabi);
+  
+  /* 既存互換 */
+  --color-ai: var(--matsu);
+  --color-hiwada: var(--take);
+  --color-shu: var(--ume);
+  --color-wakakusa: var(--take);
 
   /* フォント定義: Shippori Minchoを優先 */
   --font-serif: var(--font-shippori), var(--font-noto-serif), serif;
-  /* UIパーツなどでゴシック的に使いたい場合も明朝体をベースにするか、Noto Serifを使う */
   --font-sans: var(--font-noto-serif), sans-serif;
+  
+  /* アニメーション定義 */
+  --animate-fade-in: fade-in 0.5s ease-out;
+  --animate-float: float 3s ease-in-out infinite;
+  
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-serif);
+  
+  /* 和紙風のざらつきテクスチャ（CSSノイズ） */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+  background-attachment: fixed;
+}
+
+/* 豪華な金色の枠線ユーティリティ */
+.border-gold-gradient {
+  border-image: linear-gradient(to bottom right, var(--gold), var(--gold-light), var(--gold)) 1;
+}
+
+.text-gold-gradient {
+  background: linear-gradient(to bottom, var(--gold), var(--gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold); /* fallback */
 }
 
 /* 縦書きユーティリティ */

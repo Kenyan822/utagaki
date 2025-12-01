@@ -27,11 +27,14 @@ export default function WaitingRoomPage() {
   };
 
   return (
-    <main className="min-h-screen bg-kinari relative p-4 md:p-8">
+    <main className="shochikubai-canvas min-h-screen relative p-4 md:p-8">
       {/* ヘッダー */}
-      <header className="mb-8 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-ai font-serif">待合処</h1>
-        <Link href="/" className="text-sm text-hiwada hover:text-shu transition-colors underline decoration-hiwada/30 underline-offset-4">
+      <header className="mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <p className="text-xs tracking-[0.4em] text-hiwada/60">松竹梅</p>
+          <h1 className="text-3xl font-serif text-ai">待合処</h1>
+        </div>
+        <Link href="/" className="text-sm text-hiwada hover:text-shu transition-colors tracking-[0.3em]">
           戻る
         </Link>
       </header>
@@ -41,7 +44,7 @@ export default function WaitingRoomPage() {
         <div className="text-center py-16">
           <p className="text-hiwada/60 font-serif mb-4">まだ句を詠んでいません</p>
           <Link href="/compose">
-            <Button variant="primary" className="bg-shu hover:bg-shu/90 text-kinari">
+            <Button variant="musubi">
               最初の句を詠む
             </Button>
           </Link>
@@ -78,10 +81,10 @@ function VerseSection({ verse, replies, onMatch }: { verse: Verse, replies: Repl
   const isMatched = verse.status === "matched";
 
   return (
-    <div className="bg-white/50 rounded-lg p-6 shadow-sm border border-hiwada/10 flex flex-col md:flex-row gap-8">
+    <div className="shochikubai-card p-6 border border-white/40 flex flex-col md:flex-row gap-8">
       {/* 左側: 自分の上の句 */}
-      <div className="flex-shrink-0 flex flex-col items-center border-b md:border-b-0 md:border-r border-hiwada/10 pb-6 md:pb-0 md:pr-8">
-        <span className="text-xs text-hiwada mb-2 font-serif">あなたの句</span>
+      <div className="flex-shrink-0 flex flex-col items-center border-b md:border-b-0 md:border-r border-white/30 pb-6 md:pb-0 md:pr-8">
+        <span className="text-xs text-hiwada mb-2 font-serif tracking-[0.3em]">あなたの句</span>
         <Tanzaku
           content={verse.content}
           authorName={verse.author.name}
@@ -89,7 +92,7 @@ function VerseSection({ verse, replies, onMatch }: { verse: Verse, replies: Repl
           className="scale-90 origin-top"
         />
         {isMatched && (
-          <div className="mt-4 px-3 py-1 bg-shu text-kinari text-xs rounded-full font-bold">
+          <div className="mt-4 px-3 py-1 bg-shu text-kinari text-xs rounded-full font-bold tracking-[0.2em]">
             結び済み
           </div>
         )}
@@ -97,7 +100,7 @@ function VerseSection({ verse, replies, onMatch }: { verse: Verse, replies: Repl
 
       {/* 右側: 届いた返歌リスト */}
       <div className="flex-1 overflow-x-auto">
-        <span className="text-xs text-hiwada mb-4 block font-serif">届いた返歌 ({replies.length})</span>
+        <span className="text-xs text-hiwada mb-4 block font-serif tracking-[0.3em]">届いた返歌 ({replies.length})</span>
         
         {replies.length === 0 ? (
           <div className="h-full flex items-center justify-center text-hiwada/40 text-sm py-10">
@@ -106,13 +109,13 @@ function VerseSection({ verse, replies, onMatch }: { verse: Verse, replies: Repl
         ) : (
           <div className="flex gap-6 pb-4">
             {replies.map((reply) => (
-              <div key={reply.id} className="flex flex-col items-center gap-4 min-w-[120px]">
+              <div key={reply.id} className="flex flex-col items-center gap-4 min-w-[140px]">
                 {/* 下の句（簡易表示）: 本来は短冊コンポーネントか、専用の表示にする */}
-                <div className="bg-kinari border border-hiwada/20 p-4 w-32 h-64 writing-vertical-rl text-lg font-serif shadow-sm flex items-center justify-center relative">
+                <div className="bg-white/60 border border-white/40 p-4 w-32 h-64 writing-vertical-rl text-lg font-serif shadow-inner flex items-center justify-center relative rounded-lg">
                    {/* 本文 */}
-                   <span className="text-sumi">{reply.content}</span>
+                   <span className="text-sumi tracking-[0.3em]">{reply.content}</span>
                    {/* 署名 */}
-                   <span className="absolute bottom-2 left-2 text-xs text-hiwada">{reply.author.name}</span>
+                   <span className="absolute bottom-2 left-2 text-xs text-hiwada/70">{reply.author.name}</span>
                 </div>
 
                 {!isMatched ? (
@@ -120,7 +123,7 @@ function VerseSection({ verse, replies, onMatch }: { verse: Verse, replies: Repl
                      variant="musubi" 
                      size="sm" 
                      onClick={() => onMatch(reply)}
-                     className="w-full text-xs"
+                     className="w-full text-xs tracking-[0.2em]"
                    >
                      これで結ぶ
                    </Button>

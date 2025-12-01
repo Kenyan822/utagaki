@@ -37,21 +37,21 @@ export default function HistoryPage() {
   }
 
   return (
-    <main className="min-h-screen bg-kinari relative p-4 md:p-8">
-      {/* ...ヘッダー省略... */}
-      <header className="flex justify-between items-center mb-8 max-w-5xl mx-auto">
+    <main className="shochikubai-canvas min-h-screen relative p-4 md:p-8">
+      <header className="flex justify-between items-start md:items-center mb-8 max-w-5xl mx-auto">
         <div>
-          <h1 className="text-2xl font-bold text-ai font-serif">詠み履歴 (History)</h1>
-          <p className="text-sm text-hiwada mt-1">あなたが川へ流した返歌の一覧。</p>
+          <p className="text-xs tracking-[0.4em] text-hiwada/60">松竹梅</p>
+          <h1 className="text-3xl font-bold text-ai font-serif">詠み履歴</h1>
+          <p className="text-sm text-hiwada mt-1 tracking-[0.3em]">あなたが川へ流した返歌の一覧。</p>
         </div>
-        <Link href="/" className="text-sm text-hiwada hover:underline">
+        <Link href="/" className="text-sm text-hiwada hover:text-shu tracking-[0.3em]">
           戻る
         </Link>
       </header>
 
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
         {myReplies.length === 0 ? (
-          <div className="col-span-full text-center py-20 border border-dashed border-hiwada/20 rounded-lg">
+          <div className="col-span-full text-center py-20 border border-dashed border-white/40 rounded-lg">
             <p className="text-hiwada mb-4">まだ返歌を詠んでいません。</p>
             <Link href="/river">
               <Button variant="primary">川へ行く</Button>
@@ -65,7 +65,7 @@ export default function HistoryPage() {
             if (!verse) return null;
 
             return (
-              <div key={reply.id} className="bg-white/50 rounded-lg p-6 shadow-sm border border-hiwada/10 flex gap-4 transition-all hover:shadow-md">
+              <div key={reply.id} className="shochikubai-card p-6 border border-white/40 flex gap-4 transition-all hover:-translate-y-1">
                 {/* 相手の上の句（小さく表示） */}
                 <div className="flex-shrink-0 opacity-80 scale-75 origin-top-left -mr-4">
                   <Tanzaku
@@ -80,8 +80,8 @@ export default function HistoryPage() {
                 {/* 自分の返歌 */}
                 <div className="flex-1 flex flex-col justify-between py-2">
                   <div>
-                    <span className="text-xs text-hiwada mb-1 block">あなたの返歌</span>
-                    <div className="text-lg font-serif text-sumi writing-vertical-rl h-32 border-r border-hiwada/20 pr-4 mr-4">
+                    <span className="text-xs text-hiwada mb-1 block tracking-[0.3em]">あなたの返歌</span>
+                    <div className="text-lg font-serif text-sumi writing-vertical-rl h-32 border-r border-white/30 pr-4 mr-4 tracking-[0.3em]">
                       {reply.content}
                     </div>
                   </div>
@@ -92,7 +92,7 @@ export default function HistoryPage() {
                         variant="musubi" 
                         size="sm" 
                         onClick={() => showMatchReveal(verse, match.id)}
-                        className="text-xs px-3 py-1 h-auto"
+                        className="text-xs px-3 py-1 h-auto tracking-[0.2em]"
                       >
                         縁あり！
                       </Button>

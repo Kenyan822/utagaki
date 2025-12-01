@@ -3,13 +3,35 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { User } from "./user-context";
 
+// 松竹梅に加えて月(黄)・水(青)を追加
+const SHOCHIKUBAI_VARIANTS = ["matsu", "take", "ume", "tsuki", "mizu"] as const;
+export type VerseVariant = typeof SHOCHIKUBAI_VARIANTS[number];
+
+const LEGACY_VARIANT_MAP: Record<string, VerseVariant> = {
+  shoji: "matsu",
+  washi: "matsu",
+  sakura: "ume",
+  momiji: "take",
+  kinari: "matsu",
+  kusa: "take",
+  // mizu: "take", // mizuは正式なバリアントになったのでマッピング削除（または維持して後方互換）
+};
+
+const normalizeVariant = (value?: string): VerseVariant => {
+  if (value && SHOCHIKUBAI_VARIANTS.includes(value as VerseVariant)) {
+    return value as VerseVariant;
+  }
+  // mizuがレガシーマップにあるとtakeに変換されてしまうため、先にチェック済み
+  return LEGACY_VARIANT_MAP[value ?? ""] ?? "matsu";
+};
+
 // 歌（上の句）
 export interface Verse {
   id: string;
   content: string;
   author: User;
   timestamp: number;
-  variant: "shoji" | "washi" | "sakura" | "momiji";
+  variant: VerseVariant;
   status: "open" | "matched" | "expired";
 }
 
@@ -64,7 +86,7 @@ const SAMPLE_VERSES: Verse[] = [
     content: "春過ぎて 夏来にけらし 白妙の",
     author: { id: "u1", name: "持統天皇", gender: "female", createdAt: Date.now() },
     timestamp: Date.now(),
-    variant: "washi",
+    variant: "matsu",
     status: "open",
   },
   {
@@ -72,7 +94,7 @@ const SAMPLE_VERSES: Verse[] = [
     content: "久方の 光のどけき 春の日に",
     author: { id: "u2", name: "紀友則", gender: "female", createdAt: Date.now() },
     timestamp: Date.now() - 10000,
-    variant: "sakura",
+    variant: "ume",
     status: "open",
   },
   {
@@ -80,7 +102,23 @@ const SAMPLE_VERSES: Verse[] = [
     content: "ちはやぶる 神代も聞かず 竜田川",
     author: { id: "u3", name: "在原業平", gender: "female", createdAt: Date.now() },
     timestamp: Date.now() - 20000,
-    variant: "momiji",
+    variant: "take",
+    status: "open",
+  },
+  {
+    id: "v4",
+    content: "天の原 ふりさけ見れば 春日なる",
+    author: { id: "u4", name: "阿倍仲麻呂", gender: "female", createdAt: Date.now() },
+    timestamp: Date.now() - 30000,
+    variant: "tsuki", // 月（新色）
+    status: "open",
+  },
+  {
+    id: "v5",
+    content: "瀬を早み 岩にせかるる 滝川の",
+    author: { id: "u5", name: "崇徳院", gender: "female", createdAt: Date.now() },
+    timestamp: Date.now() - 40000,
+    variant: "mizu", // 水（新色）
     status: "open",
   },
 ];
@@ -99,7 +137,13 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     const storedMessages = localStorage.getItem("utagaki_messages");
 
     if (storedVerses) {
-      setVerses(JSON.parse(storedVerses));
+      const parsed = JSON.parse(storedVerses);
+      setVerses(
+        parsed.map((verse: Verse & { variant?: string }) => ({
+          ...verse,
+          variant: normalizeVariant(verse.variant),
+        }))
+      );
     } else {
       // 初回のみサンプルデータをセット
       setVerses(SAMPLE_VERSES);
@@ -134,7 +178,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       content,
       author,
       timestamp: Date.now(),
-      variant,
+      variant: normalizeVariant(variant),
       status: "open",
     };
     setVerses((prev) => [newVerse, ...prev]);

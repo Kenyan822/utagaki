@@ -8,19 +8,21 @@ interface VerticalTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAre
 export const VerticalTextarea = React.forwardRef<HTMLTextAreaElement, VerticalTextareaProps>(
   ({ className, label, placeholder, ...props }, ref) => {
     return (
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-3">
         {label && (
-          <label className="text-sm text-hiwada font-medium">{label}</label>
+          <label className="text-sm tracking-[0.3em] text-hiwada font-medium">
+            {label}
+          </label>
         )}
-        <div className="relative w-full max-w-[200px] aspect-[1/3]">
+        <div className="relative w-full max-w-[220px] aspect-[1/3] shochikubai-border bg-gradient-to-b from-white/80 to-white/60 shadow-inner">
+          <div className="absolute inset-3 border border-dashed border-[rgba(211,180,99,0.5)] pointer-events-none" />
           <textarea
             ref={ref}
             className={cn(
-              "w-full h-full p-6 resize-none",
-              "bg-kinari border-2 border-ai/20 rounded-sm focus:border-ai focus:ring-2 focus:ring-ai/20 focus:outline-none",
-              "vertical-rl text-upright text-lg tracking-widest leading-loose font-serif text-sumi",
+              "w-full h-full p-8 resize-none bg-transparent",
+              "border-0 focus:outline-none focus:ring-0",
+              "vertical-rl text-upright text-xl tracking-[0.5em] leading-relaxed font-serif text-sumi",
               "placeholder:text-sumi/30",
-              "shadow-inner",
               className
             )}
             placeholder={placeholder}

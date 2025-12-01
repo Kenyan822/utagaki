@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { useGame } from "@/lib/game-context";
 import { useUser } from "@/lib/user-context";
 import { Button } from "@/components/ui/Button";
+import { cn } from "@/lib/utils";
 
 export default function ChatPage() {
   const params = useParams();
@@ -38,10 +39,10 @@ export default function ChatPage() {
 
   if (!match || !verse || !reply) {
     return (
-      <div className="min-h-screen bg-kinari flex items-center justify-center">
-        <div className="text-center">
+      <div className="shochikubai-canvas min-h-screen flex items-center justify-center">
+        <div className="text-center shochikubai-panel px-12 py-10 space-y-4">
           <p className="text-hiwada mb-4">この文のやり取りは見つかりませんでした。</p>
-          <Link href="/waiting-room" className="text-shu underline">待合処へ戻る</Link>
+          <Link href="/waiting-room" className="text-shu underline tracking-[0.3em]">待合処へ戻る</Link>
         </div>
       </div>
     );
@@ -61,42 +62,35 @@ export default function ChatPage() {
   };
 
   return (
-    <main className="min-h-screen bg-kinari flex flex-col">
-      {/* ヘッダー */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-hiwada/10 p-4 flex items-center justify-between">
-        <Link href="/waiting-room" className="text-hiwada hover:text-shu transition-colors">
+    <main className="shochikubai-canvas min-h-screen flex flex-col">
+      <header className="bg-white/40 backdrop-blur-lg border-b border-white/30 p-4 flex items-center justify-between rounded-t-2xl">
+        <Link href="/waiting-room" className="text-hiwada hover:text-shu transition-colors tracking-[0.3em]">
           ← 戻る
         </Link>
-        <h1 className="text-lg font-serif text-ai">
+        <h1 className="text-lg font-serif text-ai tracking-[0.3em]">
           {partner?.name ?? "相手"} との文
         </h1>
-        <div className="w-12" /> {/* スペーサー */}
+        <div className="w-12" />
       </header>
 
-      {/* メッセージエリア */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-6">
-        {/* 最初のきっかけとなった歌 */}
-        <div className="flex flex-col items-center gap-4 py-8 opacity-70">
-          <div className="bg-white/50 p-4 rounded border border-hiwada/10 text-center max-w-sm">
-            <p className="font-serif text-hiwada mb-2 text-sm border-b border-hiwada/10 pb-2">縁の始まり</p>
-            <div className="flex flex-row-reverse justify-center gap-4 text-sumi font-serif">
-              {/* 右側：上の句（先に詠まれたもの） */}
+      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex flex-col items-center gap-4 py-6">
+          <div className="shochikubai-card p-6 border border-white/40 text-center max-w-md">
+            <p className="font-serif text-hiwada mb-2 text-sm border-b border-white/30 pb-2 tracking-[0.3em]">縁の始まり</p>
+            <div className="flex flex-row-reverse justify-center gap-6 text-sumi font-serif">
               <div className="flex flex-col items-center gap-1">
-                <div className="writing-vertical-rl h-32 text-lg">{verse.content}</div>
+                <div className="writing-vertical-rl h-32 text-lg tracking-[0.3em]">{verse.content}</div>
                 <span className="text-[10px] text-hiwada/60">{verse.author.name}</span>
               </div>
-              
-              {/* 左側：下の句（返歌）※縦書きなので左に配置されるのが後 */}
               <div className="flex flex-col items-center gap-1 mt-8">
-                <div className="writing-vertical-rl h-32 text-lg">{reply.content}</div>
+                <div className="writing-vertical-rl h-32 text-lg tracking-[0.3em]">{reply.content}</div>
                 <span className="text-[10px] text-hiwada/60">{reply.author.name}</span>
               </div>
             </div>
           </div>
-          <p className="text-xs text-hiwada/40">ここから二人の物語が始まります</p>
+          <p className="text-xs text-hiwada/40 tracking-[0.3em]">ここから二人の物語が始まります</p>
         </div>
 
-        {/* チャットメッセージ */}
         {chatMessages.map((msg) => {
           const isMe = msg.senderId === user.id;
           return (
@@ -105,11 +99,12 @@ export default function ChatPage() {
               className={`flex ${isMe ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`max-w-[70%] px-4 py-2 rounded-lg ${
+                className={cn(
+                  "max-w-[70%] px-5 py-3 rounded-2xl shadow-md tracking-[0.1em]",
                   isMe
-                    ? "bg-shu text-kinari rounded-br-none"
-                    : "bg-white border border-hiwada/20 text-sumi rounded-bl-none"
-                }`}
+                    ? "bg-gradient-to-br from-shu to-ume-rose text-kinari rounded-br-none"
+                    : "bg-white/80 border border-white/40 text-sumi rounded-bl-none"
+                )}
               >
                 <p className="whitespace-pre-wrap">{msg.content}</p>
                 <p className={`text-[10px] mt-1 ${isMe ? "text-kinari/60" : "text-hiwada/40"}`}>
@@ -122,8 +117,7 @@ export default function ChatPage() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* 入力エリア */}
-      <div className="bg-white/80 backdrop-blur-sm border-t border-hiwada/10 p-4">
+      <div className="bg-white/60 backdrop-blur-lg border-t border-white/30 p-4 rounded-b-2xl">
         <div className="flex gap-2 max-w-2xl mx-auto">
           <input
             type="text"
@@ -131,13 +125,13 @@ export default function ChatPage() {
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="文を書く..."
-            className="flex-1 px-4 py-2 border border-hiwada/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-shu/30 bg-kinari"
+            className="flex-1 px-4 py-3 border border-white/40 rounded-xl focus:outline-none focus:ring-2 focus:ring-shu/30 bg-white/70"
           />
           <Button
-            variant="primary"
+            variant="musubi"
             onClick={handleSend}
             disabled={!newMessage.trim()}
-            className="bg-shu hover:bg-shu/90 text-kinari px-6"
+            className="px-6"
           >
             送る
           </Button>

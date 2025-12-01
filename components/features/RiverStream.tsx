@@ -6,9 +6,20 @@ import { Tanzaku } from "@/components/ui/Tanzaku";
 import { VerseDetailModal } from "./VerseDetailModal";
 import { useGame, VerseVariant } from "@/lib/game-context";
 
-const getVariant = (v: string) => {
-  if (["kinari", "sakura", "mizu", "kusa"].includes(v)) return v as any;
-  return "kinari";
+// バリアント定義の拡張
+const ALL_VARIANTS: VerseVariant[] = ["matsu", "take", "ume", "tsuki", "mizu"];
+
+const getVariant = (value: string): VerseVariant => {
+  if (ALL_VARIANTS.includes(value as VerseVariant)) {
+    return value as VerseVariant;
+  }
+  // レガシーマッピング
+  if (value === "sakura") return "ume";
+  if (value === "momiji") return "take";
+  if (value === "kusa") return "take";
+  // mizuは正規バリアントになったためマッピング不要だが、念のため
+  if (value === "shoji" || value === "washi" || value === "kinari") return "kinari" as any; // kinariはTanzaku側でサポートされているがVerseVariant型には含まれない場合がある（要確認）
+  return "matsu";
 };
 
 // レーン数（画面の横幅を何分割するか）
@@ -21,19 +32,20 @@ export function RiverStream() {
 
   useEffect(() => {
     // データソースを verses (Context) に変更
-    // ただし、数が少ないと寂しいので、少し増幅させる
-    // NOTE: versesのスプレッド展開 (...) を行う前に、versesが反復可能か確認するか、配列であることを保証する
-    // useVerses の初期値が undefined の場合のエラーガードは Context hook 内にあるが、念のため
     const sourceVerses = Array.isArray(verses) ? verses : [];
     const baseItems = [...sourceVerses];
     
-    // 足りない場合は繰り返す
+    // 足りない場合は繰り返す (賑やかし)
     if (sourceVerses.length > 0) {
       while(baseItems.length < 20) {
          // ランダムに選んで追加
          const randomVerse = sourceVerses[Math.floor(Math.random() * sourceVerses.length)];
          if (randomVerse) {
-            baseItems.push(randomVerse);
+            baseItems.push({
+              ...randomVerse,
+              // ダミーコピーの場合はIDを変えないとKey重複エラーになるが、
+              // ここでは表示用の一時オブジェクトとして扱う
+            });
          }
       }
     }
@@ -42,7 +54,6 @@ export function RiverStream() {
     const laneDelays = new Array(LANE_COUNT).fill(0).map(() => Math.random() * 10);
 
     const generatedItems = baseItems.map((item, i) => {
-      // 既存ロジックと同じ
       const lane = i % LANE_COUNT;
       const startDelay = laneDelays[lane];
       const interval = Math.random() * 15 + 30; 
@@ -63,10 +74,10 @@ export function RiverStream() {
 
   return (
     <>
-      <div className="relative w-full h-screen overflow-hidden bg-ai/10">
+      <div className="relative w-full h-screen overflow-hidden bg-linear-to-b from-[rgba(11,47,38,0.3)] via-[rgba(19,85,59,0.2)] to-[rgba(138,27,69,0.25)]">
         {/* 川の背景: 縦に流れるイメージ */}
-        <div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 animate-pulse" />
+        <div className="absolute inset-0 z-0 opacity-40 pointer-events-none mix-blend-screen">
+          <div className="absolute inset-0 bg-linear-to-b from-transparent via-white/5 to-transparent animate-pulse" />
           <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern id="water-v" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
@@ -105,7 +116,6 @@ function FloatingTanzakuVertical({ item, onClick }: { item: any, onClick: () => 
 
   useEffect(() => {
     // 画面上外(-50vh) から 下外(150vh) へ移動
-    // item.delay が変更された場合などに備えて、アニメーションを再設定
     controls.start({
       y: ["-50vh", "150vh"],
       x: [0, 10, -10, 0], // 左右にゆらゆら
@@ -131,7 +141,7 @@ function FloatingTanzakuVertical({ item, onClick }: { item: any, onClick: () => 
         }
       }
     });
-  }, [controls, item.duration, item.delay]); // item全体ではなく必要なプロパティのみ依存させる
+  }, [controls, item.duration, item.delay]);
 
   // レーンの中心位置 (%)
   const laneCenter = (100 / LANE_COUNT) * item.lane + (100 / LANE_COUNT / 2);

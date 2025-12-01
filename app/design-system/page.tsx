@@ -4,9 +4,9 @@ import { VerticalTextarea } from "@/components/ui/VerticalTextarea";
 
 export default function DesignSystemPage() {
   return (
-    <div className="min-h-screen bg-kinari p-8 md:p-16 space-y-16">
-      <section>
-        <h2 className="text-2xl font-bold text-ai mb-8 border-b border-ai/20 pb-2">ボタン (Buttons)</h2>
+    <div className="shochikubai-canvas min-h-screen p-8 md:p-16 space-y-16">
+      <section className="shochikubai-panel p-8">
+        <h2 className="text-2xl font-bold text-ai mb-8 border-b border-white/40 pb-2 tracking-[0.3em]">ボタン</h2>
         <div className="flex flex-wrap gap-4 items-center">
           <Button variant="primary">基本ボタン (Primary)</Button>
           <Button variant="secondary">副ボタン (Secondary)</Button>
@@ -16,18 +16,17 @@ export default function DesignSystemPage() {
         </div>
       </section>
 
-      <section>
-        <h2 className="text-2xl font-bold text-ai mb-8 border-b border-ai/20 pb-2">短冊 (Tanzaku)</h2>
-        <div className="flex flex-wrap gap-8 items-start bg-blue-50/50 p-8 rounded-lg overflow-x-auto">
-          <Tanzaku content="古池や 蛙飛びこむ 水の音" authorName="芭蕉" variant="kinari" />
-          <Tanzaku content="柿くへば 鐘が鳴るなり 法隆寺" authorName="子規" variant="sakura" />
-          <Tanzaku content="君待つと 我が恋ひをれば 我が宿の 簾動かし 秋の風吹く" authorName="額田王" variant="mizu" />
-          <Tanzaku content="面白い ことを言っても 一人きり" authorName="詠み人知らず" variant="kusa" />
+      <section className="shochikubai-panel p-8">
+        <h2 className="text-2xl font-bold text-ai mb-8 border-b border-white/40 pb-2 tracking-[0.3em]">短冊 (Tanzaku)</h2>
+        <div className="flex flex-wrap gap-8 items-start bg-white/40 p-8 rounded-lg overflow-x-auto">
+          <Tanzaku content="常磐なる 緑の誓い 松の風" authorName="松" variant="matsu" />
+          <Tanzaku content="瑞々しき 音を響かす 竹の道" authorName="竹" variant="take" />
+          <Tanzaku content="紅く香る 早春を告げる 梅の雨" authorName="梅" variant="ume" />
         </div>
       </section>
 
-      <section>
-        <h2 className="text-2xl font-bold text-ai mb-8 border-b border-ai/20 pb-2">入力 (Input)</h2>
+      <section className="shochikubai-panel p-8">
+        <h2 className="text-2xl font-bold text-ai mb-8 border-b border-white/40 pb-2 tracking-[0.3em]">入力 (Input)</h2>
         <div className="flex justify-center bg-white/50 p-8 rounded-lg">
           <VerticalTextarea 
             placeholder="ここに一句..."

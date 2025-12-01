@@ -18,18 +18,18 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-kinari flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      {/* 装飾 */}
-      <div className="absolute top-0 right-0 w-full h-full pointer-events-none opacity-5">
-        <div className="absolute top-10 right-10 w-40 h-40 rounded-full border-4 border-sumi/20" />
-        <div className="absolute bottom-10 left-10 w-60 h-60 rounded-full border-2 border-sumi/20" />
+    <div className="shochikubai-canvas flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[rgba(138,27,69,0.18)] to-transparent blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-[rgba(61,138,92,0.2)] to-transparent blur-3xl" />
       </div>
 
-      <div className="w-full max-w-md bg-white/40 backdrop-blur-sm p-8 md:p-12 rounded-lg border border-hiwada/10 shadow-xl relative z-10 flex flex-col gap-10">
+      <div className="w-full max-w-md shochikubai-panel p-8 md:p-12 relative z-10 flex flex-col gap-10">
         
         <div className="text-center">
-          <h1 className="text-3xl font-serif text-ai font-bold tracking-widest mb-2">新規登録</h1>
-          <p className="text-xs text-hiwada/60">門をくぐるための名乗りを上げてください</p>
+          <p className="text-xs tracking-[0.4em] text-hiwada/60 mb-2">松竹梅</p>
+          <h1 className="text-3xl font-serif text-ai font-bold tracking-[0.4em] mb-2">新規登録</h1>
+          <p className="text-xs text-hiwada/60 tracking-[0.3em]">門をくぐるための名乗りを上げてください</p>
         </div>
 
         {/* 入力フォーム群 */}
@@ -37,7 +37,7 @@ export default function RegisterPage() {
           
           {/* 名前入力 */}
           <div className="flex flex-col gap-2">
-            <label className="text-sm text-hiwada font-medium text-center">お名前 (雅号)</label>
+            <label className="text-sm text-hiwada font-medium text-center tracking-[0.4em]">お名前 (雅号)</label>
             <input
               type="text"
               value={name}
@@ -49,12 +49,12 @@ export default function RegisterPage() {
 
           {/* 性別選択 */}
           <div className="flex flex-col gap-3">
-            <label className="text-sm text-hiwada font-medium text-center">性別</label>
+            <label className="text-sm text-hiwada font-medium text-center tracking-[0.4em]">性別</label>
             <div className="flex justify-center gap-4">
               <button
                 onClick={() => setGender("male")}
                 className={cn(
-                  "flex-1 py-4 border rounded-sm transition-all font-serif text-lg relative overflow-hidden group",
+                  "flex-1 py-4 border rounded-lg transition-all font-serif text-lg relative overflow-hidden group bg-gradient-to-br from-white/40 to-transparent",
                   gender === "male" 
                     ? "bg-ai text-kinari border-ai shadow-md" 
                     : "bg-transparent text-sumi border-sumi/20 hover:bg-ai/5"
@@ -66,7 +66,7 @@ export default function RegisterPage() {
               <button
                 onClick={() => setGender("female")}
                 className={cn(
-                  "flex-1 py-4 border rounded-sm transition-all font-serif text-lg relative overflow-hidden group",
+                  "flex-1 py-4 border rounded-lg transition-all font-serif text-lg relative overflow-hidden group bg-gradient-to-br from-white/40 to-transparent",
                   gender === "female" 
                     ? "bg-shu text-kinari border-shu shadow-md" 
                     : "bg-transparent text-sumi border-sumi/20 hover:bg-shu/5"

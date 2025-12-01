@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useUser } from "@/lib/user-context";
 import { useGame } from "@/lib/game-context";
 import { Button } from "@/components/ui/Button";
-import { cn } from "@/lib/utils";
 
 export default function Home() {
   const { user, isAuthenticated, logout } = useUser();
@@ -27,79 +26,117 @@ export default function Home() {
   const myReplyCount = user ? replies.filter(r => r.author.id === user.id).length : 0;
 
   return (
-    <div className="min-h-screen bg-kinari relative flex flex-col">
-      <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8">
-        <div className="w-full max-w-md flex flex-col items-center gap-8">
-          <div className="text-center space-y-4">
-            <h1 className="text-4xl md:text-6xl font-serif text-ai tracking-widest writing-vertical-rl md:writing-horizontal-tb mx-auto h-64 md:h-auto flex items-center justify-center">
+    <div className="min-h-screen relative flex flex-col overflow-hidden bg-kinari">
+      {/* --- 装飾背景 (Decorations) --- */}
+      
+      {/* 四隅の装飾 (Corner Ornaments) */}
+      <div className="fixed top-0 left-0 w-32 h-32 pointer-events-none opacity-20 z-0">
+        <svg viewBox="0 0 100 100" className="fill-matsu">
+          <path d="M0,0 Q50,0 50,50 T100,100 L0,100 Z" fill="none" stroke="currentColor" strokeWidth="2" />
+          <circle cx="20" cy="20" r="10" />
+          <circle cx="40" cy="10" r="5" />
+        </svg>
+      </div>
+      <div className="fixed bottom-0 right-0 w-40 h-40 pointer-events-none opacity-20 z-0 rotate-180">
+        <svg viewBox="0 0 100 100" className="fill-ume">
+           <path d="M0,0 Q50,0 50,50 T100,100 L0,100 Z" fill="none" stroke="currentColor" strokeWidth="2" />
+           <circle cx="20" cy="20" r="15" />
+           <circle cx="45" cy="15" r="8" />
+        </svg>
+      </div>
+
+      {/* 霞（Kasumi）のようなぼかし */}
+      <div className="fixed top-1/4 right-[-10%] w-96 h-96 bg-gold/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="fixed bottom-1/4 left-[-10%] w-96 h-96 bg-miyabi/10 rounded-full blur-[100px] pointer-events-none" />
+
+      {/* --- メインコンテンツ --- */}
+      <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 relative z-10">
+        <div className="w-full max-w-lg flex flex-col items-center gap-10 py-10 px-6 border border-gold/30 bg-white/40 backdrop-blur-sm shadow-xl rounded-lg">
+          
+          {/* タイトルセクション */}
+          <div className="text-center space-y-4 relative py-8">
+            <h1 className="text-5xl md:text-7xl font-serif tracking-widest text-transparent bg-clip-text bg-linear-to-b from-matsu via-sumi to-matsu drop-shadow-sm select-none">
               歌垣
             </h1>
-            <p className="text-sm text-hiwada font-serif tracking-widest">
-              言葉で繋がる、心の縁。
+            <div className="w-24 h-[2px] bg-linear-to-r from-transparent via-gold to-transparent mx-auto" />
+            <p className="text-sm md:text-base text-matsu/80 font-serif tracking-[0.2em]">
+              言葉で結ぶ、<br className="md:hidden" />千年の恋。
             </p>
           </div>
 
           {!isAuthenticated ? (
-            <div className="flex flex-col gap-4 mt-8">
-              <Link href="/login">
-                <Button variant="primary" size="lg" className="w-48">
+            <div className="flex flex-col gap-6 w-full max-w-xs animate-fade-in">
+              <Link href="/login" className="w-full">
+                <Button variant="gold" size="xl" className="w-full text-xl shadow-gold/40">
                   物語を始める
                 </Button>
               </Link>
+              <div className="text-center text-xs text-matsu/60 font-serif">
+                <span className="inline-block border-b border-matsu/20 pb-1">
+                  雅な世界へようこそ
+                </span>
+              </div>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-6 w-full">
-              <div className="text-center mb-4">
-                <p className="text-hiwada font-serif mb-2">ようこそ、{user?.name} 様</p>
+            <div className="flex flex-col items-center gap-8 w-full animate-fade-in">
+              <div className="text-center">
+                <p className="text-matsu font-serif text-lg">
+                  ようこそ、<span className="font-bold border-b-2 border-gold/50 px-1">{user?.name}</span> 様
+                </p>
               </div>
 
-              {/* 性別によるメインアクションの出し分け */}
-              {user?.gender === 'female' ? (
-                <div className="flex flex-col gap-4 w-full max-w-xs">
-                  <Link href="/compose" className="w-full">
-                    <Button variant="primary" size="lg" className="w-full py-8 text-lg bg-shu hover:bg-shu/90 text-kinari">
-                      詠む
-                    </Button>
-                  </Link>
-                  <Link href="/waiting-room" className="w-full text-center text-sm text-hiwada hover:text-ai underline decoration-hiwada/30 underline-offset-4">
-                    待合処へ ({myVerseCount}首)
-                  </Link>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-4 w-full max-w-xs">
-                  <Link href="/river" className="w-full">
-                    <Button variant="primary" size="lg" className="w-full py-8 text-lg">
-                      川へ行く
-                    </Button>
-                  </Link>
-                  <Link href="/history" className="w-full text-center text-sm text-hiwada hover:text-ai underline decoration-hiwada/30 underline-offset-4">
-                    詠み履歴 ({myReplyCount}首)
-                  </Link>
-                </div>
-              )}
+              {/* アクションボタン */}
+              <div className="w-full max-w-xs space-y-6">
+                {user?.gender === 'female' ? (
+                  <>
+                    <Link href="/compose" className="block w-full">
+                      <Button variant="musubi" size="xl" className="w-full py-6 text-xl tracking-widest">
+                        詠む
+                      </Button>
+                    </Link>
+                    <Link href="/waiting-room" className="block w-full">
+                      <Button variant="secondary" className="w-full">
+                        待合処へ ({myVerseCount}首)
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/river" className="block w-full">
+                      <Button variant="primary" size="xl" className="w-full py-6 text-xl tracking-widest">
+                        川へ行く
+                      </Button>
+                    </Link>
+                    <Link href="/history" className="block w-full">
+                      <Button variant="outline" className="w-full">
+                        詠み履歴 ({myReplyCount}首)
+                      </Button>
+                    </Link>
+                  </>
+                )}
+              </div>
 
-              {/* マッチング済みのチャットリスト (共通) */}
+              {/* マッチングリスト */}
               {myMatches.length > 0 && (
-                <div className="w-full max-w-xs mt-6 border-t border-hiwada/10 pt-6">
-                  <h3 className="text-sm font-serif text-hiwada mb-3">文（ふみ）を交わす</h3>
-                  <div className="flex flex-col gap-2">
+                <div className="w-full max-w-xs pt-6 border-t border-gold/30">
+                  <h3 className="text-sm font-serif text-matsu/70 mb-4 text-center tracking-widest">
+                    — 結ばれた縁 —
+                  </h3>
+                  <div className="flex flex-col gap-3">
                     {myMatches.map(match => {
-                      // 相手の名前を特定
-                      // マッチに関連する verse と reply を探す
                       const verse = verses.find(v => v.id === match.verseId);
                       const reply = replies.find(r => r.id === match.replyId);
                       
-                      // 自分が verse の作者なら相手は reply の作者、逆も然り
                       let partnerName = "結ばれた縁";
                       if (verse && reply && user) {
                         partnerName = user.id === verse.author.id ? reply.author.name : verse.author.name;
                       }
                       
                       return (
-                        <Link key={match.id} href={`/chat/${match.id}`} className="block">
-                          <div className="bg-white/60 hover:bg-white p-3 rounded border border-hiwada/10 flex items-center justify-between text-sm transition-colors">
-                            <span className="font-serif text-ai">{partnerName}</span> 
-                            <span className="text-xs text-hiwada/60">→</span>
+                        <Link key={match.id} href={`/chat/${match.id}`} className="block group">
+                          <div className="bg-white/60 border border-gold/30 p-3 rounded flex items-center justify-between shadow-sm transition-all group-hover:shadow-md group-hover:border-gold group-hover:bg-white/80">
+                            <span className="font-serif text-matsu text-sm">{partnerName}</span> 
+                            <span className="text-gold text-xs group-hover:translate-x-1 transition-transform">拝見 →</span>
                           </div>
                         </Link>
                       );
@@ -108,11 +145,13 @@ export default function Home() {
                 </div>
               )}
 
-              <div className="pt-8 mt-4 border-t border-hiwada/10 w-full flex justify-center gap-6 text-xs text-hiwada/60 mb-8">
-                 <button onClick={logout} className="hover:text-shu transition-colors">
-                   門を出る（ログアウト）
+              {/* フッターリンク */}
+              <div className="flex gap-6 text-xs text-matsu/50 font-serif pt-4">
+                 <button onClick={logout} className="hover:text-ume transition-colors">
+                   門を出る
                  </button>
-                 <Link href="/design-system" className="hover:text-ai transition-colors">
+                 <span className="text-gold/50">|</span>
+                 <Link href="/design-system" className="hover:text-take transition-colors">
                    意匠一覧
                  </Link>
               </div>
@@ -121,7 +160,7 @@ export default function Home() {
         </div>
       </main>
       
-      <footer className="mt-12 mb-4 text-[10px] text-hiwada/40 font-serif w-full text-center">
+      <footer className="py-4 text-[10px] text-matsu/30 font-serif text-center relative z-10">
         <p>Utagaki Project</p>
       </footer>
     </div>
